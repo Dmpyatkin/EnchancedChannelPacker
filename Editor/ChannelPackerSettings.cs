@@ -1,7 +1,9 @@
 using UnityEngine;
 
-namespace ChannelPacker {
-	public class ChannelPackerSettings : ScriptableObject {
+namespace EnchancedChannelPacker
+{
+	public class ChannelPackerSettings : ScriptableObject
+	{
 		public ChannelPackerPreset lastPreset;
 	}
 }
