@@ -21,14 +21,22 @@ namespace EnchancedChannelPacker
 		private ComputeShader fastPack;
 
 		private static EnchancedChannelPacker window;
+		
+		[SerializeField]
 		public ChannelPackerPreset preset;
+		[SerializeField]
 		public ChannelPackerSettings settings;
 
 		//Inputs
+		[SerializeField]
 		private Texture2D[] inputs = new Texture2D[4];
+		[SerializeField]
 		public float[] defaults = new float[4];
+		[SerializeField]
 		public float[] mults = new float[4] { 1, 1, 1, 1 };
+		[SerializeField]
 		public ColorChannel[] froms = new ColorChannel[4];
+		[SerializeField]
 		public bool[] inverts = new bool[4];
 
 		private RenderTexture[] blits = new RenderTexture[4];
@@ -102,12 +110,25 @@ namespace EnchancedChannelPacker
 			void ChannelInput(int channelInput)
 			{
 				GUILayout.BeginVertical(EditorStyles.helpBox);
-				inputs[channelInput] = (Texture2D)EditorGUILayout.ObjectField($"{preset.names[channelInput]} Input", inputs[channelInput], typeof(Texture2D), false);
+				
+				EditorGUI.BeginChangeCheck();
+				Texture2D newInput = (Texture2D)EditorGUILayout.ObjectField($"{preset.names[channelInput]} Input", inputs[channelInput], typeof(Texture2D), false);
+				if (EditorGUI.EndChangeCheck())
+				{
+					Undo.RecordObject(this, "Change Input Texture");
+					inputs[channelInput] = newInput;
+				}
+				
 				if (!inputs[channelInput])
 				{
 					GUILayout.Label($"No {preset.names[channelInput]} Input, use slider to set value", regularSmall);
-					defaults[channelInput] = EditorGUILayout.Slider(defaults[channelInput], 0f, 1f);
-
+					EditorGUI.BeginChangeCheck();
+					float newDefault = EditorGUILayout.Slider(defaults[channelInput], 0f, 1f);
+					if (EditorGUI.EndChangeCheck())
+					{
+						Undo.RecordObject(this, "Change Default Value");
+						defaults[channelInput] = newDefault;
+					}
 				}
 				else
 				{
@@ -122,9 +143,30 @@ namespace EnchancedChannelPacker
 						textureDimensions.y = inputs[channelInput].height;
 					}
 
-					froms[channelInput] = (ColorChannel)EditorGUILayout.EnumPopup("From Channel", froms[channelInput]);
-					mults[channelInput] = EditorGUILayout.Slider($"Multiplier", mults[channelInput], 0f, 1f);
-					inverts[channelInput] = EditorGUILayout.Toggle("Invert", inverts[channelInput]);
+					EditorGUI.BeginChangeCheck();
+					ColorChannel newFrom = (ColorChannel)EditorGUILayout.EnumPopup("From Channel", froms[channelInput]);
+					if (EditorGUI.EndChangeCheck())
+					{
+						Undo.RecordObject(this, "Change Source Channel");
+						froms[channelInput] = newFrom;
+					}
+					
+					EditorGUI.BeginChangeCheck();
+					float newMult = EditorGUILayout.Slider($"Multiplier", mults[channelInput], 0f, 1f);
+					if (EditorGUI.EndChangeCheck())
+					{
+						Undo.RecordObject(this, "Change Multiplier");
+						mults[channelInput] = newMult;
+					}
+					
+					EditorGUI.BeginChangeCheck();
+					bool newInvert = EditorGUILayout.Toggle("Invert", inverts[channelInput]);
+					if (EditorGUI.EndChangeCheck())
+					{
+						Undo.RecordObject(this, "Change Invert");
+						inverts[channelInput] = newInvert;
+					}
+					
 					if (inputs[channelInput] && inputs[channelInput].graphicsFormat.ToString().Contains("SRGB"))
 						GUILayout.Label("Texture marked as sRGB! Disabling recommended", smallWarn);
 				}
@@ -143,8 +185,22 @@ namespace EnchancedChannelPacker
 			}
 			if (GUILayout.Button("Clear All"))
 			{
+				Undo.RecordObject(this, "Clear All");
+				
+				// Clear textures
 				inputs[0] = inputs[1] = inputs[2] = inputs[3] = null;
 				textureDimensions = Vector2Int.zero;
+				
+				// Reset all settings to defaults
+				for (int i = 0; i < 4; i++)
+				{
+					mults[i] = 1f;
+					inverts[i] = false;
+					froms[i] = ColorChannel.R;
+					defaults[i] = 0f;
+				}
+				
+				// Clean up preview
 				if (previewEditor != null)
 				{
 					DestroyImmediate(previewEditor);
@@ -163,9 +219,11 @@ namespace EnchancedChannelPacker
 			}
 
 			EditorGUI.BeginChangeCheck();
-			preset = (ChannelPackerPreset)EditorGUILayout.ObjectField(new GUIContent("Preset", "The preset packing settings to be used"), preset, typeof(ChannelPackerPreset), preset);
+			ChannelPackerPreset newPreset = (ChannelPackerPreset)EditorGUILayout.ObjectField(new GUIContent("Preset", "The preset packing settings to be used"), preset, typeof(ChannelPackerPreset), preset);
 			if (EditorGUI.EndChangeCheck())
 			{
+				Undo.RecordObject(this, "Change Preset");
+				preset = newPreset;
 				LoadSettings();
 				if (textureDimensions != Vector2Int.zero)
 				{
@@ -175,6 +233,7 @@ namespace EnchancedChannelPacker
 
 			if (GUILayout.Button("Reload Preset"))
 			{
+				Undo.RecordObject(this, "Reload Preset");
 				LoadSettings();
 				if (textureDimensions != Vector2Int.zero)
 				{

@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bba5d97ea663d6340baf72623baf2849, type: 3}
   m_Name: ChannelPackerSettings
   m_EditorClassIdentifier: 
-  lastPreset: {fileID: 11400000, guid: f477d425d39a514419afdd7db141bba3, type: 2}
+  lastPreset: {fileID: 11400000, guid: e4be5679d051f89459137114f6c233cf, type: 2}
