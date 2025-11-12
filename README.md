@@ -5,6 +5,8 @@ Unity Texture Channels Combiner. Pack multiple texture color channels into one t
 Just Drag-And-Drop unity package to your project, it imports everything into Plugins/EnchancedChannelPacker folder
 Then open window with **Tools/EnchancedChannelPacker**
 
+# Features
+
 Original features:
 - Combine multiple textures into one output texture (For use in Mask maps or other packed texture techniques)
 - Choose which channel each texture pulls from, and where it goes to
