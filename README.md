@@ -19,6 +19,8 @@ My changes:
 - Update result texture in preview window after any input changes - on input textures reload, on input channel change, on multiplier and invert change
 - Remember selected channel in result Texture Preview - now changes in input parameters do not reset it to default
 - New Reload Preset button - to forcely reload current preset - in case if it was changed
+- Undo/Redo features supported now
+- Fixed "Clear All" button - now it clears all field, not just textures
 
 <img width="397" height="1050" alt="Untitled" src="https://github.com/user-attachments/assets/4fd6ae79-aa96-442c-89f1-12845df3172f" />
 
