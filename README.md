@@ -1,7 +1,9 @@
 # EnchancedChannelPacker
 Unity Texture Channels Combiner. Pack multiple texture color channels into one texture. Change strength of each channel, invert. See result on the fly in the editor
 
-Open with **Tools/EnchancedChannelPacker**
+# Installation
+Just Drag-And-Drop unity package to your project, it imports everything into Plugins/EnchancedChannelPacker folder
+Then open window with **Tools/EnchancedChannelPacker**
 
 Original features:
 - Combine multiple textures into one output texture (For use in Mask maps or other packed texture techniques)
